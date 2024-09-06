@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Advanced Search</title>
+        <style>
+            #header {
+                background-color: CornflowerBlue;
+                text-decoration: none;
+                display: grid;
+                padding: 5px;
+                grid-column-gap: 5px;
+                grid-row-gap: 5px;
+                grid-template-columns: 70px 100px 115px;
+                position: fixed;
+                top: 0;
+                right: 0;
+                border-radius: 9px;
+            }
+
+            .header-item {
+                background-color: MintCream;
+                font-size: 10px;
+                padding: 5px;
+                text-align: center;
+                border-radius: 5px;
+            }
+
+            .header-item a {
+                text-decoration: none;
+                /* Remove the underline */
+                color: CornflowerBlue;
+                /* Corrected the color property */
+                display: block;
+                /* Ensures the link takes up the full space of the div */
+            }
+
+            .header-item a:hover {
+                background-color: LightSkyBlue;
+                /* Add a hover effect to change background color */
+                color: white;
+                /* Optional: change text color on hover */
+            }
+
+            .advanced-search-form {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
+                margin: 50px auto;
+                padding: 20px;
+                max-width: 600px;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+            }
+
+            .grid-item {
+                display: flex;
+                flex-direction: column;
+            }
+
+            button {
+                background-color: #4285F4;
+                /* Google blue */
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="header">
+            <div class="header-item"><a href="index.html">Google Search</a></div>
+            <div class="header-item"><a href="image.html">Google Image Search</a></div>
+            <div class="header-item"><a href="advance.html">Google Advanced Search</a></div>
+        </div>
+        <div class="advanced-search-form">
+            <div class="grid-item">
+                <label for="all-words">All these words:</label>
+                <input type="text" id="all-words" name="all-words">
+            </div>
+            <div class="grid-item">
+                <label for="exact-phrase">This exact word or phrase:</label>
+                <input type="text" id="exact-phrase" name="exact-phrase">
+            </div>
+            <div class="grid-item">
+                <label for="any-words">Any of these words:</label>
+                <input type="text" id="any-words" name="any-words">
+            </div>
+            <div class="grid-item">
+                <label for="none-words">None of these words:</label>
+                <input type="text" id="none-words" name="none-words">
+            </div>
+            <div class="grid-item">
+                <button type="submit">Advanced Search</button>
+            </div>
+        </div>
+    </body>
+
+</html>
