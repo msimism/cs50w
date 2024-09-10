@@ -1,0 +1,98 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ listing.title }}</h2>
+
+    <!-- Item details -->
+    <div class="listing-details">
+        <div class="listing-image">
+            <!-- Display image if available -->
+            {% if listing.image_url %}
+                <img src="{{ listing.image_url }}" alt="{{ listing.title }}" class="img-fluid">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+        </div>
+        
+        <div class="listing-info">
+            <p><strong>Description:</strong> {{ listing.description }}</p>
+            <p><strong>Starting Bid:</strong> ${{ listing.starting_bid }}</p>
+            <p><strong>Current Bid:</strong> ${{ listing.current_bid }}</p>
+            <p><strong>Category:</strong> {{ listing.category }}</p>
+            <p><strong>Status:</strong> {% if listing.is_active %}Active{% else %}Closed{% endif %}</p>
+            <p><strong>Created By:</strong> {{ listing.created_by }}</p>
+        </div>
+    </div>
+
+    <!-- Show winner if the auction is closed and a winner exists -->
+    {% if not listing.is_active and listing.winner %}
+        <div class="alert alert-success mt-3">
+            <strong>Auction Closed!</strong> The winner is {{ listing.winner.username }} with a bid of ${{ listing.current_bid }}.
+        </div>
+    {% endif %}
+
+    <!-- Bidding Section -->
+    {% if user.is_authenticated and listing.is_active %}
+        <div class="bid-section">
+            <h4>Place a Bid</h4>
+            <form action="{% url 'bid' listing.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="bid">Your Bid (must be higher than ${{ listing.current_bid }})</label>
+                    <input type="number" step="0.01" name="bid" class="form-control" id="bid" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Place Bid</button>
+            </form>
+        </div>
+    {% else %}
+        <p>You must be logged in to place a bid.</p>
+    {% endif %}
+
+    <!-- Watchlist Section -->
+    {% if user.is_authenticated %}
+    <form action="{% url 'watchlist_toggle' listing.id %}" method="post">
+        {% csrf_token %}
+        {% if listing in user.watchlist.all %}
+            <button type="submit" class="btn btn-warning">Remove from Watchlist</button>
+        {% else %}
+            <button type="submit" class="btn btn-success">Add to Watchlist</button>
+        {% endif %}
+    </form>
+    {% endif %}
+
+    <!-- Comments Section -->
+    <div class="comments-section mt-4">
+        <h4>Comments</h4>
+        <ul class="list-group">
+            {% for comment in listing.listing_comments.all %}
+                <li class="list-group-item">
+                    <strong>{{ comment.user.username }}:</strong> {{ comment.text }} <em>on {{ comment.created_at }}</em>
+                </li>
+            {% empty %}
+                <p>No comments yet.</p>
+            {% endfor %}
+        </ul>
+
+        <!-- Add a comment -->
+        {% if user.is_authenticated %}
+            <h4>Leave a Comment</h4>
+            <form action="{% url 'comment' listing.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea name="comment" class="form-control" placeholder="Add your comment" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-secondary">Submit Comment</button>
+            </form>
+        {% else %}
+            <p>You must be logged in to leave a comment.</p>
+        {% endif %}
+    </div>
+
+    <!-- Close Auction -->
+    {% if listing.created_by == user and listing.is_active %}
+        <form action="{% url 'close_listing' listing.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger mt-4">Close Listing</button>
+        </form>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>My Won Auctions</h2>
+    
+    <ul>
+        {% for auction in won_auctions %}
+            <li>
+                <a href="{% url 'listing' auction.id %}">{{ auction.title }}</a> - Won with a bid of ${{ auction.current_bid }}
+            </li>
+        {% empty %}
+            <p>You haven't won any auctions yet.</p>
+        {% endfor %}
+    </ul>
+{% endblock %}
